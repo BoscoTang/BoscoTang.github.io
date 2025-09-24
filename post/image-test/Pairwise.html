@@ -216,19 +216,19 @@
     
     <div class="container">
         <div class="card">
-            <h3>賽道</h3>
+            <h3>地區</h3>
             <ul>
-                <li>Las Vegas</li>
-                <li>Monaco</li>
-                <li>Suzuka</li>
-                <li>Abu-Dhabi</li>
+                <li>台灣(TW)</li>
+                <li>日本(JP)</li>
+                <li>美國(US)</li>
+                <li>韓國(KR)</li>
             </ul>
         </div>
         
         <div class="card">
             <h3>版型</h3>
             <ul>
-                <li>PH</li>
+                <li>Holiday</li>
                 <li>Standard</li>
             </ul>
         </div>
@@ -263,8 +263,8 @@
     
     <div class="step">
         <h3>步驟 1: 列出所有參數和值</h3>
-        <p>賽道: Las Vegas, Monaco, Suzuka, Abu-Dhabi</p>
-        <p>版型: PH, Standard</p>
+        <p>地區: 台灣(TW), 日本(JP), 美國(US), 韓國(KR)</p>
+        <p>版型: Holiday, Standard</p>
         <p>裝置: iOS, Android, PC</p>
     </div>
     
@@ -275,79 +275,79 @@
         <table>
             <tr>
                 <th>測試案例</th>
-                <th>賽道</th>
+                <th>地區</th>
                 <th>版型</th>
                 <th>裝置</th>
             </tr>
             <tr>
                 <td>1</td>
-                <td>Las Vegas</td>
-                <td>PH</td>
+                <td>台灣(TW)</td>
+                <td>Holiday</td>
                 <td>iOS</td>
             </tr>
             <tr>
                 <td>2</td>
-                <td>Las Vegas</td>
+                <td>台灣(TW)</td>
                 <td>Standard</td>
                 <td>Android</td>
             </tr>
             <tr>
                 <td>3</td>
-                <td>Monaco</td>
-                <td>PH</td>
+                <td>日本(JP)</td>
+                <td>Holiday</td>
                 <td>Android</td>
             </tr>
             <tr>
                 <td>4</td>
-                <td>Monaco</td>
+                <td>日本(JP)</td>
                 <td>Standard</td>
                 <td>PC</td>
             </tr>
             <tr>
                 <td>5</td>
-                <td>Suzuka</td>
-                <td>PH</td>
+                <td>美國(US)</td>
+                <td>Holiday</td>
                 <td>PC</td>
             </tr>
             <tr>
                 <td>6</td>
-                <td>Suzuka</td>
+                <td>美國(US)</td>
                 <td>Standard</td>
                 <td>iOS</td>
             </tr>
             <tr>
                 <td>7</td>
-                <td>Abu-Dhabi</td>
-                <td>PH</td>
+                <td>韓國(KR)</td>
+                <td>Holiday</td>
                 <td>Android</td>
             </tr>
             <tr>
                 <td>8</td>
-                <td>Abu-Dhabi</td>
+                <td>韓國(KR)</td>
                 <td>Standard</td>
                 <td>PC</td>
             </tr>
             <tr>
                 <td>9</td>
-                <td>Las Vegas</td>
-                <td>PH</td>
+                <td>台灣(TW)</td>
+                <td>Holiday</td>
                 <td>PC</td>
             </tr>
             <tr>
                 <td>10</td>
-                <td>Monaco</td>
+                <td>日本(JP)</td>
                 <td>Standard</td>
                 <td>iOS</td>
             </tr>
             <tr>
                 <td>11</td>
-                <td>Suzuka</td>
-                <td>PH</td>
+                <td>美國(US)</td>
+                <td>Holiday</td>
                 <td>iOS</td>
             </tr>
             <tr>
                 <td>12</td>
-                <td>Abu-Dhabi</td>
+                <td>韓國(KR)</td>
                 <td>Standard</td>
                 <td>Android</td>
             </tr>
@@ -358,8 +358,8 @@
         <h3>步驟 3: 驗證覆蓋率</h3>
         <p>檢查是否每個參數值的組合都至少出現一次：</p>
         <ul>
-            <li>賽道 × 版型: 4 × 2 = 8種組合，全部覆蓋</li>
-            <li>賽道 × 裝置: 4 × 3 = 12種組合，全部覆蓋</li>
+            <li>地區 × 版型: 4 × 2 = 8種組合，全部覆蓋</li>
+            <li>地區 × 裝置: 4 × 3 = 12種組合，全部覆蓋</li>
             <li>版型 × 裝置: 2 × 3 = 6種組合，全部覆蓋</li>
         </ul>
     </div>
@@ -388,21 +388,21 @@
     
     <script>
         function generateTestCases() {
-            const tracks = ['Las Vegas', 'Monaco', 'Suzuka', 'Abu-Dhabi'];
-            const layouts = ['PH', 'Standard'];
+            const areas = ['台灣(TW)', '日本(JP)', '美國(US)', '韓國(KR)'];
+            const layouts = ['Holiday', 'Standard'];
             const devices = ['iOS', 'Android', 'PC'];
             
             // 簡化的配對生成算法
             let testCases = [];
             
-            // 確保每個賽道與每個版型和裝置至少配對一次
-            for (let i = 0; i < tracks.length; i++) {
+            // 確保每個地區與每個版型和裝置至少配對一次
+            for (let i = 0; i < areas.length; i++) {
                 for (let j = 0; j < layouts.length; j++) {
                     for (let k = 0; k < devices.length; k++) {
                         // 簡單的配對邏輯 - 實際應用中會使用更複雜的算法
                         if ((i + j + k) % 2 === 0 || testCases.length < 12) {
                             testCases.push({
-                                track: tracks[i],
+                                track: areas[i],
                                 layout: layouts[j],
                                 device: devices[k]
                             });
@@ -432,7 +432,7 @@
                 div.className = 'test-case';
                 div.innerHTML = `
                     <strong>測試案例 ${index + 1}:</strong> 
-                    賽道: ${testCase.track}, 
+                    地區: ${testCase.track}, 
                     版型: ${testCase.layout}, 
                     裝置: ${testCase.device}
                 `;
