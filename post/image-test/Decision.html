@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>決策表格分析法 (Decision Table Testing) 教學</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft JhengHei", "微軟正黑體", sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e74c3c;
+        }
+        
+        h2 {
+            margin-top: 30px;
+            padding-left: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        h3 {
+            margin-top: 20px;
+            color: #c0392b;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        .step {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .step:before {
+            content: counter(step-counter);
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .comparison {
+            display: flex;
+            justify-content: space-between;
+            margin: 25px 0;
+        }
+        
+        .comparison-box {
+            flex: 1;
+            padding: 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .condition {
+            background-color: #e8f4fd;
+            border: 1px solid #3498db;
+        }
+        
+        .action {
+            background-color: #e8f6ea;
+            border: 1px solid #2ecc71;
+        }
+        
+        .rule {
+            background-color: #fef9e7;
+            border: 1px solid #f39c12;
+        }
+        
+        .conclusion {
+            background-color: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .scenario {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                flex-direction: column;
+            }
+            
+            .comparison-box {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>決策表格分析法 (Decision Table Testing) 教學</h1>
+        
+        <h2>什麼是決策表格分析法？</h2>
+        <p>決策表格分析法是一種系統性的黑盒測試技術，用於測試具有邏輯條件的業務規則。它特別適用於處理多個輸入條件組合並產生不同行動的系統。</p>
+        
+        <div class="example-box">
+            <h3>決策表格的基本結構</h3>
+            <p>決策表格由四個部分組成：</p>
+            <ul>
+                <li><strong>條件樁 (Condition Stub)</strong>：列出所有輸入條件</li>
+                <li><strong>條件項 (Condition Entry)</strong>：列出條件可能的取值組合</li>
+                <li><strong>行動樁 (Action Stub)</strong>：列出所有可能的行動</li>
+                <li><strong>行動項 (Action Entry)</strong>：標示在特定條件組合下應執行的行動</li>
+            </ul>
+        </div>
+        
+        <h2>決策表格分析法範例：信用卡申請審核</h2>
+        
+        <div class="scenario">
+            <h3>業務場景描述</h3>
+            <p>一家銀行需要審核信用卡申請，審核規則如下：</p>
+            <ul>
+                <li>條件1：申請人年齡是否大於18歲？</li>
+                <li>條件2：申請人收入是否超過3萬元？</li>
+                <li>條件3：申請人信用評分是否良好？</li>
+            </ul>
+            <p>可能的審核結果：</p>
+            <ul>
+                <li>行動1：批准申請</li>
+                <li>行動2：拒絕申請</li>
+                <li>行動3：要求提供更多資料</li>
+            </ul>
+        </div>
+        
+        <h2>建立決策表格的步驟</h2>
+        
+        <div class="step">
+            <h3>步驟1：識別條件和行動</h3>
+            <p>確定系統中的所有條件和可能的行動：</p>
+            <ul>
+                <li><strong>條件</strong>：
+                    <ul>
+                        <li>C1: 年齡 > 18歲？ (是/否)</li>
+                        <li>C2: 收入 > 3萬元？ (是/否)</li>
+                        <li>C3: 信用評分良好？ (是/否)</li>
+                    </ul>
+                </li>
+                <li><strong>行動</strong>：
+                    <ul>
+                        <li>A1: 批准申請</li>
+                        <li>A2: 拒絕申請</li>
+                        <li>A3: 要求提供更多資料</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <h3>步驟2：計算條件組合數量</h3>
+            <p>每個條件有2種可能值（是/否），3個條件共有 2³ = 8 種組合。</p>
+        </div>
+        
+        <div class="step">
+            <h3>步驟3：建立決策表格</h3>
+            <p>列出所有條件組合，並確定每種組合下應執行的行動。</p>
+        </div>
+        
+        <h2>信用卡申請審核決策表格</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>條件/規則</th>
+                    <th>規則1</th>
+                    <th>規則2</th>
+                    <th>規則3</th>
+                    <th>規則4</th>
+                    <th>規則5</th>
+                    <th>規則6</th>
+                    <th>規則7</th>
+                    <th>規則8</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>條件：年齡 > 18歲？</strong></td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>否</td>
+                    <td>否</td>
+                    <td>否</td>
+                </tr>
+                <tr>
+                    <td><strong>條件：收入 > 3萬元？</strong></td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>否</td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>否</td>
+                </tr>
+                <tr>
+                    <td><strong>條件：信用評分良好？</strong></td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>是</td>
+                    <td>否</td>
+                    <td>是</td>
+                    <td>否</td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="9"><strong>行動</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>批准申請</strong></td>
+                    <td>✓</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><strong>拒絕申請</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>✓</td>
+                    <td>✓</td>
+                    <td>✓</td>
+                    <td>✓</td>
+                </tr>
+                <tr>
+                    <td><strong>要求提供更多資料</strong></td>
+                    <td></td>
+                    <td>✓</td>
+                    <td>✓</td>
+                    <td>✓</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>簡化決策表格</h2>
+        <p>通過合併相似規則，可以簡化決策表格：</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>條件/規則</th>
+                    <th>規則1</th>
+                    <th>規則2</th>
+                    <th>規則3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>條件：年齡 > 18歲？</strong></td>
+                    <td>是</td>
+                    <td>是</td>
+                    <td>否</td>
+                </tr>
+                <tr>
+                    <td><strong>條件：收入 > 3萬元？</strong></td>
+                    <td>是</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td><strong>條件：信用評分良好？</strong></td>
+                    <td>是</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr style="background-color: #f0f0f0;">
+                    <td colspan="4"><strong>行動</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>批准申請</strong></td>
+                    <td>✓</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><strong>拒絕申請</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td>✓</td>
+                </tr>
+                <tr>
+                    <td><strong>要求提供更多資料</strong></td>
+                    <td></td>
+                    <td>✓</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <p>說明：</p>
+        <ul>
+            <li><strong>規則1</strong>：年齡>18歲、收入>3萬元、信用評分良好 → 批准申請</li>
+            <li><strong>規則2</strong>：年齡>18歲，但收入或信用評分不符合要求 → 要求提供更多資料</li>
+            <li><strong>規則3</strong>：年齡≤18歲 → 拒絕申請（無論其他條件如何）</li>
+        </ul>
+        
+        <h2>從決策表格導出測試案例</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>測試案例編號</th>
+                    <th>條件組合</th>
+                    <th>預期結果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>TC-01</td>
+                    <td>年齡>18歲, 收入>3萬元, 信用評分良好</td>
+                    <td>批准申請</td>
+                </tr>
+                <tr>
+                    <td>TC-02</td>
+                    <td>年齡>18歲, 收入>3萬元, 信用評分不良</td>
+                    <td>要求提供更多資料</td>
+                </tr>
+                <tr>
+                    <td>TC-03</td>
+                    <td>年齡>18歲, 收入≤3萬元, 信用評分良好</td>
+                    <td>要求提供更多資料</td>
+                </tr>
+                <tr>
+                    <td>TC-04</td>
+                    <td>年齡>18歲, 收入≤3萬元, 信用評分不良</td>
+                    <td>要求提供更多資料</td>
+                </tr>
+                <tr>
+                    <td>TC-05</td>
+                    <td>年齡≤18歲, 收入>3萬元, 信用評分良好</td>
+                    <td>拒絕申請</td>
+                </tr>
+                <tr>
+                    <td>TC-06</td>
+                    <td>年齡≤18歲, 收入>3萬元, 信用評分不良</td>
+                    <td>拒絕申請</td>
+                </tr>
+                <tr>
+                    <td>TC-07</td>
+                    <td>年齡≤18歲, 收入≤3萬元, 信用評分良好</td>
+                    <td>拒絕申請</td>
+                </tr>
+                <tr>
+                    <td>TC-08</td>
+                    <td>年齡≤18歲, 收入≤3萬元, 信用評分不良</td>
+                    <td>拒絕申請</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>決策表格分析法的優點</h2>
+        
+        <div class="comparison">
+            <div class="comparison-box condition">
+                <h3>系統性</h3>
+                <p>確保所有可能的條件組合都被考慮，避免遺漏重要測試案例。</p>
+            </div>
+            
+            <div class="comparison-box action">
+                <h3>清晰明確</h3>
+                <p>以表格形式呈現，邏輯關係一目了然，便於理解和溝通。</p>
+            </div>
+            
+            <div class="comparison-box rule">
+                <h3>高效性</h3>
+                <p>通過合併相似規則，可以減少測試案例數量，提高測試效率。</p>
+            </div>
+        </div>
+        
+        <div class="conclusion">
+            <h2>結論</h2>
+            <p>決策表格分析法是處理複雜業務規則的有效測試技術。它特別適用於：</p>
+            <ul>
+                <li>具有多個輸入條件的系統</li>
+                <li>條件之間存在邏輯關係的場景</li>
+                <li>需要確保所有可能組合都被測試的情況</li>
+            </ul>
+            <p>通過建立決策表格，測試人員可以系統性地導出測試案例，確保測試的完整性和有效性。</p>
+        </div>
+        
+
+    </div>
+</body>
+</html>
