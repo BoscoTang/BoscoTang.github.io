@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>決策表格分析法教學</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --success: #2ecc71;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h3 {
+            color: var(--dark);
+            margin: 1.2rem 0 0.8rem;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .scenario-box {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .test-case-table tr:hover {
+            background-color: #e3f2fd;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .interactive-section {
+            background: #e8f4fc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .result-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid var(--success);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            table {
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>決策表格分析法教學</h1>
+            <p>學習如何使用決策表格設計軟體測試案例</p>
+        </header>
+        
+        <section class="content-section">
+            <h2>什麼是決策表格分析法？</h2>
+            <p>決策表格分析法（Decision Table Testing）是一種系統性的黑盒測試技術，用於測試具有複雜業務邏輯的系統。它將業務規則表示為條件和動作的組合，幫助測試人員設計出完整且無冗餘的測試案例。</p>
+            
+            <p>決策表格特別適用於以下情況：</p>
+            <ul>
+                <li>業務邏輯包含多個條件組合</li>
+                <li>不同的條件組合會觸發不同的動作</li>
+                <li>需要確保所有可能的邏輯組合都被測試到</li>
+            </ul>
+        </section>
+        
+        <section class="content-section">
+            <h2>範例情境：網路商店折扣規則</h2>
+            <div class="scenario-box">
+                <p>某網路商店為吸引顧客，制定了以下折扣規則：</p>
+                <ul>
+                    <li><strong>新用戶 (New User)</strong>：
+                        <ul>
+                            <li>訂單金額滿 $1000：享有 9 折優惠</li>
+                            <li>訂單金額未滿 $1000：無折扣</li>
+                        </ul>
+                    </li>
+                    <li><strong>註冊會員 (Registered Member)</strong>：
+                        <ul>
+                            <li>訂單金額滿 $500 且使用優惠券：享有 8 折優惠</li>
+                            <li>訂單金額滿 $500 但未使用優惠券：享有 95 折優惠</li>
+                            <li>訂單金額未滿 $500：無折扣</li>
+                        </ul>
+                    </li>
+                    <li><strong>非會員 (Guest)</strong>：無論訂單金額多少，均無折扣</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>步驟一：識別條件與動作</h2>
+            <h3>條件（Conditions）</h3>
+            <ul>
+                <li><span class="highlight">C1: 用戶類型</span> - 新用戶(N)、註冊會員(R)、非會員(G)</li>
+                <li><span class="highlight">C2: 訂單金額區間</span> - T1(&lt;500)、T2(500~999)、T3(≥1000)</li>
+                <li><span class="highlight">C3: 是否使用優惠券</span> - 是(Y)、否(N)</li>
+            </ul>
+            
+            <h3>動作（Actions）</h3>
+            <ul>
+                <li><span class="highlight">折扣比例</span> - 無折扣(1.0)、95折(0.95)、9折(0.9)、8折(0.8)</li>
+            </ul>
+        </section>
+        
+        <section class="content-section">
+            <h2>步驟二：建立決策表格</h2>
+            <p>將所有條件組合與對應的動作整理成表格：</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>規則編號</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                        <th>6</th>
+                        <th>7</th>
+                        <th>8</th>
+                        <th>9</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>用戶類型</strong></td>
+                        <td>新用戶(N)</td>
+                        <td>新用戶(N)</td>
+                        <td>會員(R)</td>
+                        <td>會員(R)</td>
+                        <td>會員(R)</td>
+                        <td>會員(R)</td>
+                        <td>會員(R)</td>
+                        <td>非會員(G)</td>
+                        <td>非會員(G)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>金額區間</strong></td>
+                        <td>T3(≥1000)</td>
+                        <td>T1/T2(&lt;1000)</td>
+                        <td>T3(≥1000)</td>
+                        <td>T3(≥1000)</td>
+                        <td>T2(500~999)</td>
+                        <td>T2(500~999)</td>
+                        <td>T1(&lt;500)</td>
+                        <td>T1/T2/T3</td>
+                        <td>T1/T2/T3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>使用優惠券</strong></td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>Y</td>
+                        <td>N</td>
+                        <td>Y</td>
+                        <td>N</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr style="background-color: #e8f5e9;">
+                        <td><strong>折扣</strong></td>
+                        <td>0.9</td>
+                        <td>1.0</td>
+                        <td>0.8</td>
+                        <td>0.95</td>
+                        <td>0.8</td>
+                        <td>0.95</td>
+                        <td>1.0</td>
+                        <td>1.0</td>
+                        <td>1.0</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>說明：</p>
+            <ul>
+                <li>規則1: 新用戶 + 金額≥1000 → 9折</li>
+                <li>規則2: 新用戶 + 金額&lt;1000 → 無折扣</li>
+                <li>規則3: 會員 + 金額≥1000 + 有券 → 8折</li>
+                <li>規則4: 會員 + 金額≥1000 + 無券 → 95折</li>
+                <li>規則5: 會員 + 金額500~999 + 有券 → 8折</li>
+                <li>規則6: 會員 + 金額500~999 + 無券 → 95折</li>
+                <li>規則7: 會員 + 金額&lt;500 → 無折扣</li>
+                <li>規則8-9: 非會員 → 無折扣</li>
+            </ul>
+        </section>
+        
+        <section class="content-section">
+            <h2>步驟三：設計測試案例</h2>
+            <p>根據決策表格中的每一條規則，設計對應的測試案例：</p>
+            
+            <table class="test-case-table">
+                <thead>
+                    <tr>
+                        <th>測試案例</th>
+                        <th>用戶類型</th>
+                        <th>訂單金額</th>
+                        <th>使用優惠券</th>
+                        <th>預期折扣</th>
+                        <th>對應規則</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TC1</td>
+                        <td>新用戶</td>
+                        <td>1000</td>
+                        <td>無</td>
+                        <td>0.9</td>
+                        <td>規則1</td>
+                    </tr>
+                    <tr>
+                        <td>TC2</td>
+                        <td>新用戶</td>
+                        <td>500</td>
+                        <td>無</td>
+                        <td>1.0</td>
+                        <td>規則2</td>
+                    </tr>
+                    <tr>
+                        <td>TC3</td>
+                        <td>會員</td>
+                        <td>1000</td>
+                        <td>有</td>
+                        <td>0.8</td>
+                        <td>規則3</td>
+                    </tr>
+                    <tr>
+                        <td>TC4</td>
+                        <td>會員</td>
+                        <td>1000</td>
+                        <td>無</td>
+                        <td>0.95</td>
+                        <td>規則4</td>
+                    </tr>
+                    <tr>
+                        <td>TC5</td>
+                        <td>會員</td>
+                        <td>600</td>
+                        <td>有</td>
+                        <td>0.8</td>
+                        <td>規則5</td>
+                    </tr>
+                    <tr>
+                        <td>TC6</td>
+                        <td>會員</td>
+                        <td>600</td>
+                        <td>無</td>
+                        <td>0.95</td>
+                        <td>規則6</td>
+                    </tr>
+                    <tr>
+                        <td>TC7</td>
+                        <td>會員</td>
+                        <td>400</td>
+                        <td>無</td>
+                        <td>1.0</td>
+                        <td>規則7</td>
+                    </tr>
+                    <tr>
+                        <td>TC8</td>
+                        <td>非會員</td>
+                        <td>400</td>
+                        <td>無</td>
+                        <td>1.0</td>
+                        <td>規則8</td>
+                    </tr>
+                    <tr>
+                        <td>TC9</td>
+                        <td>非會員</td>
+                        <td>1000</td>
+                        <td>無</td>
+                        <td>1.0</td>
+                        <td>規則9</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>為什麼需要TC3/TC4和TC5/TC6？</h3>
+            <p>TC3/TC4測試的是當會員訂單金額≥1000時，是否正確忽略「新用戶規則」而優先適用「會員規則」。</p>
+            <p>TC5/TC6測試的是當會員訂單金額在500~999時，是否正確套用會員折扣。</p>
+            <p>兩者測試的是不同的金額區間（T3 vs T2），目的是檢查規則之間是否有優先級或覆蓋問題。</p>
+        </section>
+        
+        <section class="content-section">
+            <h2>步驟四：檢查覆蓋率</h2>
+            <p>通過上述測試案例，我們可以確保：</p>
+            <ul>
+                <li>所有用戶類型都被測試到</li>
+                <li>所有金額區間都被測試到</li>
+                <li>會員的優惠券使用情況都被測試到</li>
+                <li>每條業務規則至少被測試一次</li>
+            </ul>
+            
+            <p>如果需要更嚴格的測試，還可以增加邊界值測試：</p>
+            <ul>
+                <li>金額邊界：499, 500, 501, 999, 1000, 1001</li>
+                <li>特殊情況：金額為0、負數、極大值等</li>
+            </ul>
+        </section>
+        
+        <section class="interactive-section">
+            <h2>互動練習：測試案例生成器</h2>
+            <p>選擇條件，查看預期的折扣結果：</p>
+            
+            <div class="form-group">
+                <label for="userType">用戶類型：</label>
+                <select id="userType">
+                    <option value="new">新用戶</option>
+                    <option value="registered">註冊會員</option>
+                    <option value="guest">非會員</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="orderAmount">訂單金額：</label>
+                <input type="number" id="orderAmount" value="500" min="0">
+            </div>
+            
+            <div class="form-group">
+                <label for="coupon">使用優惠券：</label>
+                <select id="coupon">
+                    <option value="no">否</option>
+                    <option value="yes">是</option>
+                </select>
+            </div>
+            
+            <button class="btn" onclick="calculateDiscount()">計算折扣</button>
+            
+            <div id="result" class="result-box" style="display: none;">
+                <h3>結果：</h3>
+                <p id="resultText"></p>
+            </div>
+        </section>
+        
+        <section class="content-section">
+            <h2>決策表格的優點與限制</h2>
+            <h3>優點：</h3>
+            <ul>
+                <li>系統性地涵蓋所有條件組合</li>
+                <li>減少測試案例的遺漏</li>
+                <li>容易發現規格中的不一致或遺漏</li>
+                <li>提供清晰的測試覆蓋率指標</li>
+            </ul>
+            
+            <h3>限制：</h3>
+            <ul>
+                <li>當條件數量多時，組合會呈指數增長</li>
+                <li>可能需要簡化或合併條件來管理複雜度</li>
+                <li>不適合測試順序相關的邏輯</li>
+            </ul>
+        </section>
+        
+       
+    </div>
+    
+    <script>
+        function calculateDiscount() {
+            const userType = document.getElementById('userType').value;
+            const orderAmount = parseInt(document.getElementById('orderAmount').value);
+            const coupon = document.getElementById('coupon').value;
+            
+            let discount = 1.0; // 預設無折扣
+            
+            if (userType === 'new') {
+                if (orderAmount >= 1000) {
+                    discount = 0.9;
+                }
+            } else if (userType === 'registered') {
+                if (orderAmount >= 500) {
+                    if (coupon === 'yes') {
+                        discount = 0.8;
+                    } else {
+                        discount = 0.95;
+                    }
+                }
+            }
+            // 非會員保持預設值1.0（無折扣）
+            
+            const resultText = `用戶類型: ${getUserTypeText(userType)}<br>
+                               訂單金額: $${orderAmount}<br>
+                               使用優惠券: ${coupon === 'yes' ? '是' : '否'}<br>
+                               預期折扣: ${discount} (${getDiscountText(discount)})`;
+            
+            document.getElementById('resultText').innerHTML = resultText;
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function getUserTypeText(userType) {
+            switch(userType) {
+                case 'new': return '新用戶';
+                case 'registered': return '註冊會員';
+                case 'guest': return '非會員';
+                default: return '未知';
+            }
+        }
+        
+        function getDiscountText(discount) {
+            if (discount === 1.0) return '無折扣';
+            if (discount === 0.95) return '95折';
+            if (discount === 0.9) return '9折';
+            if (discount === 0.8) return '8折';
+            return '未知折扣';
+        }
+    </script>
+</body>
+</html>
