@@ -1,214 +1,229 @@
 <!DOCTYPE html>
-<html lang="zh-tw" data-theme=""><head>
-    <title> Bosco Tang | Guide to Thumbnails in Hugo </title>
-
-    
-    <meta charset="utf-8"><meta name="generator" content="Hugo 0.80.0" /><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <meta name="description" content="Call me Bosco">
-    
-    <link rel="stylesheet"
-          href="https://BoscoTang.github.io/css/style.min.bb7146835efb4da60bec03e4c446c3a3b94260c78c8bdb82057b37dab9c8768e.css"
-          integrity="sha256-u3FGg177TaYL7APkxEbDo7lCYMeMi9uCBXs32rnIdo4="
-          crossorigin="anonymous"
-          type="text/css">
-    
-    <link rel="stylesheet"
-        href="https://BoscoTang.github.io/css/markupHighlight.min.9755453ffb7bc4cd220f86ebb5922107b49f193cc62fc17e9785d27b33a8bf5b.css"
-        integrity="sha256-l1VFP/t7xM0iD4brtZIhB7SfGTzGL8F&#43;l4XSezOov1s="
-        crossorigin="anonymous"
-        type="text/css">
-    
-    <link rel="stylesheet" 
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" 
-    integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" 
-    crossorigin="anonymous" />
-
-    
-    <link rel="shortcut icon" href="https://BoscoTang.github.io/favicons/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://BoscoTang.github.io/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://BoscoTang.github.io/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://BoscoTang.github.io/favicons/favicon-16x16.png">
-
-    <link rel="canonical" href="https://BoscoTang.github.io/post/image-test/">
-
-    
-    
-    
-    
-    <script type="text/javascript"
-            src="https://BoscoTang.github.io/js/anatole-header.min.d8599ee07b7d3f11bafbac30657ccc591e8d7fd36a9f580cd4c09e24e0e4a971.js"
-            integrity="sha256-2Fme4Ht9PxG6&#43;6wwZXzMWR6Nf9Nqn1gM1MCeJODkqXE="
-            crossorigin="anonymous"></script>
-
-
-    
-        
-        
-        <script type="text/javascript"
-                src="https://BoscoTang.github.io/js/anatole-theme-switcher.min.e289e9ebb2a4e7a7f895859c8a2b0da2de1ec73f22cea58d8475aa0597023837.js"
-                integrity="sha256-4onp67Kk56f4lYWciisNot4exz8izqWNhHWqBZcCODc="
-                crossorigin="anonymous"></script>
-    
-    <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://BoscoTang.github.io/images/site-feature-image.png"/>
-
-<meta name="twitter:title" content="Guide to Thumbnails in Hugo"/>
-<meta name="twitter:description" content="Guide to Thumbnails in Hugo"/>
-
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>有效與無效等價類別圖表</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+        }
+        .valid {
+            border-left: 5px solid #2ecc71;
+        }
+        .invalid {
+            border-left: 5px solid #e74c3c;
+        }
+        h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .example {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .range {
+            font-weight: bold;
+            color: #3498db;
+        }
+        .description {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .diagram {
+            text-align: center;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .number-line {
+            position: relative;
+            height: 80px;
+            margin: 40px 0;
+            border-bottom: 2px solid #333;
+        }
+        .point {
+            position: absolute;
+            bottom: -10px;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+        .label {
+            position: absolute;
+            top: 30px;
+            transform: translateX(-50%);
+            font-weight: bold;
+        }
+        .segment {
+            position: absolute;
+            height: 10px;
+            bottom: -5px;
+            background: #2ecc71;
+        }
+        .invalid-segment {
+            background: #e74c3c;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 10px;
+        }
+    </style>
 </head>
-<body><div class="sidebar animated fadeInDown ">
-    <div class="logo-title">
-        <div class="title">
-            <img src="https://BoscoTang.github.io/images/profile.jpg" alt="profile picture">
-            <h3 title=""><a href="/">I&#39;m Bosco Tang</a></h3>
-            <div class="description">
-                <p>Call me Bosco</p>
+<body>
+    <h1>有效與無效等價類別圖表 - 年齡輸入欄位</h1>
+    
+    <div class="description">
+        <p>在軟體測試中，等價類別劃分是一種黑箱測試技術，將輸入數據劃分為多個等價類別，從每個類別中選取代表性數據進行測試。</p>
+        <p>對於年齡輸入欄位（要求年齡介於18到65歲之間），我們可以劃分為以下有效和無效等價類別：</p>
+    </div>
+    
+    <div class="diagram">
+        <h2>年齡範圍視覺化</h2>
+        <div class="number-line">
+            <div class="point" style="left: 10%;"></div>
+            <div class="label" style="left: 10%;">0</div>
+            
+            <div class="point" style="left: 28%;"></div>
+            <div class="label" style="left: 28%;">18</div>
+            
+            <div class="point" style="left: 72%;"></div>
+            <div class="label" style="left: 72%;">65</div>
+            
+            <div class="point" style="left: 90%;"></div>
+            <div class="label" style="left: 90%;">100</div>
+            
+            <div class="segment invalid-segment" style="left: 0%; width: 28%;"></div>
+            <div class="segment" style="left: 28%; width: 44%;"></div>
+            <div class="segment invalid-segment" style="left: 72%; width: 28%;"></div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e74c3c;"></div>
+                <span>無效等價類別</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2ecc71;"></div>
+                <span>有效等價類別</span>
             </div>
         </div>
     </div>
-    <ul class="social-links">
-        
-            <li>
-                <a href="https://line.me/ti/p/u6ilkSo08x" rel="me" aria-label="Mobile">
-                    <i class="fab fa-line fa-2x" aria-hidden="true"></i>
-                </a>
-            </li>
-        
-            <li>
-                <a href="https://github.com/BoscoTang" rel="me" aria-label="GitHub">
-                    <i class="fab fa-github fa-2x" aria-hidden="true"></i>
-                </a>
-            </li>
-        
-            <li>
-                <a href="https://www.instagram.com/" rel="me" aria-label="instagram">
-                    <i class="fab fa-instagram fa-2x" aria-hidden="true"></i>
-                </a>
-            </li>
-        
-            <li>
-                <a href="mailto:bosco8112385@gmail.com" rel="me" aria-label="e-mail">
-                    <i class="fas fa-envelope fa-2x" aria-hidden="true"></i>
-                </a>
-            </li>
-        
-    </ul>
-    <div class="footer">
-        <div class="by_farbox">&copy; Bosco Tang  2021 </div>
-    </div>
-</div>
-<div class="main">
-    <div class="page-top  animated fadeInDown ">
-    <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-    </a>
-    <ul class="nav" id="navMenu">
-        
-        
+    
+    <div class="container">
+        <div class="card valid">
+            <h2>有效等價類別</h2>
+            <p>符合年齡要求的輸入值：</p>
             
-            <li><a 
-                   href="/"
-                        
-                   title="">Home</a></li>
-        
-            
-            <li><a 
-                   href="/post/"
-                        
-                   title="">Posts</a></li>
-        
-            
-            <li><a 
-                   href="/about/"
-                        
-                   title="">About</a></li>
-        
-            
-            <li><a 
-                   href="/contact/"
-                        
-                   title="">Contact</a></li>
-        
-        
-        
-            <li class="theme-switch-item">
-                <a class="theme-switch" title="Switch Theme">
-                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
-                </a>
-            </li>
-        
-    </ul>
-</div>
-
-    <div class="autopagerize_page_element">
-        <div class="content">
-    <div class="post  animated fadeInDown ">
-        <div class="post-content">
-            
-            <img class="post-thumbnail" src="https://BoscoTang.github.io/images/landscape.jpg" alt="Thumbnail image">
-            
-            <div class="post-title">
-                <h3>Guide to Thumbnails in Hugo</h3>
-                
-                    <div class="info">
-                        <em class="fas fa-calendar-day"></em>
-                        <span class="date"> Mon, Mar 4, 2019 
-                                           </span>
-                        <em class="fas fa-stopwatch"></em>
-                        <span class="reading-time">閱讀時間 1 分鐘</span>
-                    </div>
-                
+            <div class="example">
+                <h3>類別 1: 邊界值內的正常年齡</h3>
+                <p><span class="range">範圍：</span> 19-64歲</p>
+                <p><span class="range">測試範例：</span> 30歲</p>
             </div>
-
-            <p>Thumbnails can be enabled easily by setting the <code>thumbnail</code> parameter in the frontmatter to an image such as <code>&quot;images/landscape.jpg&quot;</code>.</p>
-<p>Make sure to copy the image the <code>static/images/</code> directory.</p>
-<p>If put together, it will look like this (that&rsquo;s in fact this post&rsquo;s frontmatter):</p>
-<div class="highlight"><pre class="chroma"><code class="language-md" data-lang="md">+++
-author = &#34;Hugo Authors&#34;
-title = &#34;Guide to Thumbnails in Hugo&#34;
-date = &#34;2019-03-04&#34;
-description = &#34;Guide to Thumbnails in Hugo&#34;
-tags = [
-    &#34;thumbnail&#34;,
-]
-thumbnail= &#34;images/landscape.jpg&#34;
-+++
-</code></pre></div></div>
-        <div class="post-footer">
-            <div class="info">
-                
-                <span class="separator"><a class="tag" href="/tags/thumbnail/">thumbnail</a></span>
-
+            
+            <div class="example">
+                <h3>類別 2: 下邊界值</h3>
+                <p><span class="range">範圍：</span> 正好18歲</p>
+                <p><span class="range">測試範例：</span> 18歲</p>
+            </div>
+            
+            <div class="example">
+                <h3>類別 3: 上邊界值</h3>
+                <p><span class="range">範圍：</span> 正好65歲</p>
+                <p><span class="range">測試範例：</span> 65歲</p>
             </div>
         </div>
-
         
-    </div>
-
-
+        <div class="card invalid">
+            <h2>無效等價類別</h2>
+            <p>不符合年齡要求的輸入值：</p>
+            
+            <div class="example">
+                <h3>類別 1: 小於下限的年齡</h3>
+                <p><span class="range">範圍：</span> 小於18歲</p>
+                <p><span class="range">測試範例：</span> 17歲</p>
+            </div>
+            
+            <div class="example">
+                <h3>類別 2: 大於上限的年齡</h3>
+                <p><span class="range">範圍：</span> 大於65歲</p>
+                <p><span class="range">測試範例：</span> 66歲</p>
+            </div>
+            
+            <div class="example">
+                <h3>類別 3: 非數字輸入</h3>
+                <p><span class="range">範圍：</span> 非數字字符</p>
+                <p><span class="range">測試範例：</span> "abc"、空白、特殊符號</p>
+            </div>
+            
+            <div class="example">
+                <h3>類別 4: 負數年齡</h3>
+                <p><span class="range">範圍：</span> 負數值</p>
+                <p><span class="range">測試範例：</span> -5歲</p>
+            </div>
+            
+            <div class="example">
+                <h3>類別 5: 小數年齡</h3>
+                <p><span class="range">範圍：</span> 小數值</p>
+                <p><span class="range">測試範例：</span> 18.5歲</p>
+            </div>
         </div>
     </div>
-</div>
-
-<script type="text/javascript"
-        src="https://BoscoTang.github.io/js/jquery.min.86b1e8f819ee2d9099a783e50b49dff24282545fc40773861f9126b921532e4c.js"
-        integrity="sha256-hrHo&#43;BnuLZCZp4PlC0nf8kKCVF/EB3OGH5EmuSFTLkw="
-        crossorigin="anonymous"></script>
-
-
-
-
-<script type="text/javascript"
-        src="https://BoscoTang.github.io/js/bundle.min.0f9c74cb78f13d1f15f33daff4037c70354f98acfbb97a6f61708966675c3cae.js"
-        integrity="sha256-D5x0y3jxPR8V8z2v9AN8cDVPmKz7uXpvYXCJZmdcPK4="
-        crossorigin="anonymous"></script>
-
-<script type="text/javascript"
-        src="https://BoscoTang.github.io/js/medium-zoom.min.92f21c856129f84aeb719459b3e6ac621a3032fd7b180a18c04e1d12083f8aba.js"
-        integrity="sha256-kvIchWEp&#43;ErrcZRZs&#43;asYhowMv17GAoYwE4dEgg/iro="
-        crossorigin="anonymous"></script>
+    
+    <div class="description">
+        <h2>測試策略說明</h2>
+        <p>根據等價類別劃分，測試時應從每個有效和無效等價類別中至少選擇一個代表值進行測試：</p>
+        <ul>
+            <li><strong>有效等價類別測試：</strong> 驗證系統能正確接受符合要求的年齡輸入</li>
+            <li><strong>無效等價類別測試：</strong> 驗證系統能正確拒絕不符合要求的年齡輸入，並提供適當的錯誤訊息</li>
+        </ul>
+        <p>這種方法可以大幅減少測試用例數量，同時保持測試的完整性。</p>
+    </div>
 </body>
-
 </html>
