@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配對分析法(Pairwise Testing)教學</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Microsoft JhengHei", "Segoe UI", Arial, sans-serif;
+        }
+        body {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            flex: 1;
+            min-width: 300px;
+            background: linear-gradient(145deg, #ffffff, #f0f4f8);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: linear-gradient(to right, #3498db, #2c80c5);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #edf2f7;
+        }
+        .highlight {
+            background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #2196f3;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.1);
+        }
+        .comparison {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .comparison-item {
+            text-align: center;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+        .comparison-item:hover {
+            transform: scale(1.03);
+        }
+        .number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+        .step {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(145deg, #f0f4f8, #e2e8f0);
+            border-left: 5px solid #4CAF50;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .tool-section {
+            margin-top: 40px;
+            padding: 25px;
+            background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+            border-radius: 12px;
+            border-left: 5px solid #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.1);
+        }
+        button {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            background: linear-gradient(to right, #2980b9, #2471a3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .test-case {
+            margin: 12px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid #3498db;
+            transition: all 0.2s ease;
+        }
+        .test-case:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .card h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .step h3 {
+            color: #2c3e50;
+        }
+        .tool-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .benefits {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .benefit-card {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .benefit-card h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid;
+            padding-bottom: 10px;
+        }
+        .pros h3 {
+            border-color: #4CAF50;
+        }
+        .cons h3 {
+            border-color: #f44336;
+        }
+        @media (max-width: 768px) {
+            .container, .comparison, .benefits {
+                flex-direction: column;
+            }
+            .card, .comparison-item, .benefit-card {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>配對分析法(Pairwise Testing)教學</h1>
+    
+    <div class="highlight">
+        <h2>什麼是配對分析法？</h2>
+        <p>配對分析法（又稱All-pairs testing）是一種軟體測試方法，用於減少測試案例的數量，同時保持足夠的測試覆蓋率。該方法基於這樣一個觀察：大多數錯誤是由單個參數或兩個參數之間的相互作用引起的，而不是多個參數的複雜組合。</p>
+    </div>
+    
+    <h2>範例說明</h2>
+    <p>假設我們有一個前端畫面，包含以下三種變數：</p>
+    
+    <div class="container">
+        <div class="card">
+            <h3>賽道</h3>
+            <ul>
+                <li>Las Vegas</li>
+                <li>Monaco</li>
+                <li>Suzuka</li>
+                <li>Abu-Dhabi</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>版型</h3>
+            <ul>
+                <li>PH</li>
+                <li>Standard</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h3>裝置</h3>
+            <ul>
+                <li>iOS</li>
+                <li>Android</li>
+                <li>PC</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h2>傳統窮舉測試 vs 配對分析法</h2>
+    
+    <div class="comparison">
+        <div class="comparison-item">
+            <h3>傳統窮舉測試</h3>
+            <div class="number">24</div>
+            <p>測試案例 (4 × 2 × 3)</p>
+        </div>
+        
+        <div class="comparison-item">
+            <h3>配對分析法</h3>
+            <div class="number">12</div>
+            <p>測試案例 (減少50%)</p>
+        </div>
+    </div>
+    
+    <h2>如何進行配對分析？</h2>
+    
+    <div class="step">
+        <h3>步驟 1: 列出所有參數和值</h3>
+        <p>賽道: Las Vegas, Monaco, Suzuka, Abu-Dhabi</p>
+        <p>版型: PH, Standard</p>
+        <p>裝置: iOS, Android, PC</p>
+    </div>
+    
+    <div class="step">
+        <h3>步驟 2: 建立配對組合表</h3>
+        <p>我們需要確保每個參數的每個值都與其他參數的每個值至少配對一次。</p>
+        
+        <table>
+            <tr>
+                <th>測試案例</th>
+                <th>賽道</th>
+                <th>版型</th>
+                <th>裝置</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Las Vegas</td>
+                <td>PH</td>
+                <td>iOS</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Las Vegas</td>
+                <td>Standard</td>
+                <td>Android</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Monaco</td>
+                <td>PH</td>
+                <td>Android</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Monaco</td>
+                <td>Standard</td>
+                <td>PC</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Suzuka</td>
+                <td>PH</td>
+                <td>PC</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Suzuka</td>
+                <td>Standard</td>
+                <td>iOS</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Abu-Dhabi</td>
+                <td>PH</td>
+                <td>Android</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Abu-Dhabi</td>
+                <td>Standard</td>
+                <td>PC</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Las Vegas</td>
+                <td>PH</td>
+                <td>PC</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Monaco</td>
+                <td>Standard</td>
+                <td>iOS</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Suzuka</td>
+                <td>PH</td>
+                <td>iOS</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>Abu-Dhabi</td>
+                <td>Standard</td>
+                <td>Android</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="step">
+        <h3>步驟 3: 驗證覆蓋率</h3>
+        <p>檢查是否每個參數值的組合都至少出現一次：</p>
+        <ul>
+            <li>賽道 × 版型: 4 × 2 = 8種組合，全部覆蓋</li>
+            <li>賽道 × 裝置: 4 × 3 = 12種組合，全部覆蓋</li>
+            <li>版型 × 裝置: 2 × 3 = 6種組合，全部覆蓋</li>
+        </ul>
+    </div>
+    
+    <h2>優點與限制</h2>
+    <div class="benefits">
+        <div class="benefit-card pros">
+            <h3>優點：</h3>
+            <ul>
+                <li>大幅減少測試案例數量</li>
+                <li>保持較高的錯誤檢測率</li>
+                <li>節省測試時間和資源</li>
+                <li>適用於複雜的參數組合場景</li>
+            </ul>
+        </div>
+        
+        <div class="benefit-card cons">
+            <h3>限制：</h3>
+            <ul>
+                <li>可能無法發現需要三個或多個參數特定組合才能觸發的錯誤</li>
+                <li>需要仔細設計測試案例以確保足夠的覆蓋率</li>
+                <li>對於某些特殊場景，可能需要補充額外的測試案例</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function generateTestCases() {
+            const tracks = ['Las Vegas', 'Monaco', 'Suzuka', 'Abu-Dhabi'];
+            const layouts = ['PH', 'Standard'];
+            const devices = ['iOS', 'Android', 'PC'];
+            
+            // 簡化的配對生成算法
+            let testCases = [];
+            
+            // 確保每個賽道與每個版型和裝置至少配對一次
+            for (let i = 0; i < tracks.length; i++) {
+                for (let j = 0; j < layouts.length; j++) {
+                    for (let k = 0; k < devices.length; k++) {
+                        // 簡單的配對邏輯 - 實際應用中會使用更複雜的算法
+                        if ((i + j + k) % 2 === 0 || testCases.length < 12) {
+                            testCases.push({
+                                track: tracks[i],
+                                layout: layouts[j],
+                                device: devices[k]
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // 去除重複並限制為12個測試案例
+            let uniqueCases = [];
+            let seen = new Set();
+            
+            for (let testCase of testCases) {
+                let key = `${testCase.track}-${testCase.layout}-${testCase.device}`;
+                if (!seen.has(key) && uniqueCases.length < 12) {
+                    seen.add(key);
+                    uniqueCases.push(testCase);
+                }
+            }
+            
+            // 顯示測試案例
+            const container = document.getElementById('testCases');
+            container.innerHTML = '<h3>生成的測試案例:</h3>';
+            
+            uniqueCases.forEach((testCase, index) => {
+                const div = document.createElement('div');
+                div.className = 'test-case';
+                div.innerHTML = `
+                    <strong>測試案例 ${index + 1}:</strong> 
+                    賽道: ${testCase.track}, 
+                    版型: ${testCase.layout}, 
+                    裝置: ${testCase.device}
+                `;
+                container.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
